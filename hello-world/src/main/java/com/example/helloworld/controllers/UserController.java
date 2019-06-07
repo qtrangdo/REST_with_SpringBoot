@@ -18,6 +18,7 @@ public class UserController {
     return "getUsers was called with params: page - " + page + " limit - " + limit;
   }
   //RequestParam with no defaultValue will be required info.
+  //can also have required = false for String param
 
   @GetMapping(path="/{userId}")
   public String getUser(@PathVariable String userId) {
