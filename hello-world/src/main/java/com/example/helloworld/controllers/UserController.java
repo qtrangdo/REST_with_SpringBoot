@@ -1,5 +1,9 @@
 package com.example.helloworld.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import javax.validation.Valid;
 
 import com.example.helloworld.modelrequest.UserRequest;
@@ -22,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("users") //http://localhost:3000/users
 public class UserController {
 
+  // similar to Javascript object
+  Map<String, UserRest> users;
+
   @GetMapping()
   public String getUsers(@RequestParam(value="page", defaultValue = "1") int page, @RequestParam(value="limit", defaultValue = "30") int limit) {
     return "getUsers was called with params: page - " + page + " limit - " + limit;
@@ -32,11 +39,11 @@ public class UserController {
   // need to add dependency in pom.xml if want XML response
   @GetMapping(path="/{userId}", produces = { MediaType.APPLICATION_JSON_VALUE })//MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
-    UserRest returnValue = new UserRest();
-    returnValue.setLastname("Doe");
-    returnValue.setFirstname("Jane");
-    returnValue.setEmail("Jane.Doe@gmail.com");
-    return new ResponseEntity<UserRest>(returnValue, HttpStatus.OK);
+    if (users.containsKey(userId)) {
+      return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
   }
 
   @PostMapping(
@@ -49,6 +56,11 @@ public class UserController {
     returnValue.setLastname(userDetails.getLastname());
     returnValue.setFirstname(userDetails.getFirstname());
     returnValue.setEmail(userDetails.getEmail());
+    
+    String userID = UUID.randomUUID().toString();
+    returnValue.setUserId(userID);
+    if (users == null) users = new HashMap<>();
+    users.put(userID, returnValue);
     return new ResponseEntity<UserRest>(returnValue, HttpStatus.CREATED);
   }
 
