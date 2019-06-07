@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -11,17 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   @GetMapping
-  public String GetUser() {
-    return "GetUser was called";
+  public String getUser() {
+    return "getUser was called";
   }
 
   @PostMapping
-  public String CreateUser() {
-    return "CreateUser was called";
+  public String createUser() {
+    return "createUser was called";
   }
 
   @PutMapping
-  public String UpdateUser() {
-    return "UpdateUser was called";
+  public String updateUser() {
+    return "updateUser was called";
+  }
+
+  @DeleteMapping
+  public String deleteUser() {
+    return "deleteUser was called";
   }
 }
