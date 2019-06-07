@@ -1,4 +1,4 @@
-package com.example.controllers;
+package com.example.helloworld.controllers;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
