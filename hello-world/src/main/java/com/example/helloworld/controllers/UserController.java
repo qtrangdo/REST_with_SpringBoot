@@ -1,5 +1,10 @@
 package com.example.helloworld.controllers;
 
+import com.example.helloworld.modelresponse.UserRest;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +25,14 @@ public class UserController {
   //RequestParam with no defaultValue will be required info.
   //can also have required = false for String param
 
-  @GetMapping(path="/{userId}")
-  public String getUser(@PathVariable String userId) {
-    return "getUser was called with Id " + userId;
+  // need to add dependency in pom.xml if want XML response
+  @GetMapping(path="/{userId}", produces = { MediaType.APPLICATION_JSON_VALUE })//MediaType.APPLICATION_XML_VALUE})
+  public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
+    UserRest returnValue = new UserRest();
+    returnValue.setLastname("Doe");
+    returnValue.setFirstname("Jane");
+    returnValue.setEmail("Jane.Doe@gmail.com");
+    return new ResponseEntity<UserRest>(returnValue, HttpStatus.OK);
   }
 
   @PostMapping
