@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import com.example.helloworld.modelrequest.UserRequest;
+import com.example.helloworld.modelrequest.UserUpdateRequest;
 import com.example.helloworld.modelresponse.UserRest;
 
 import org.springframework.http.HttpStatus;
@@ -64,9 +65,17 @@ public class UserController {
     return new ResponseEntity<UserRest>(returnValue, HttpStatus.CREATED);
   }
 
-  @PutMapping
-  public String updateUser() {
-    return "updateUser was called";
+  @PutMapping(
+    path="/{userId}",
+    consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+    produces = { MediaType.APPLICATION_JSON_VALUE }
+  )
+  public ResponseEntity<UserRest> updateUser(@PathVariable String userId, @Valid @RequestBody UserUpdateRequest userDetails) {
+    UserRest storedUserDetails = users.get(userId);
+    storedUserDetails.setLastname(userDetails.getLastname()); 
+    storedUserDetails.setFirstname(userDetails.getFirstname());
+    users.put(userId, storedUserDetails);
+    return new ResponseEntity<UserRest>(storedUserDetails, HttpStatus.OK);
   }
 
   @DeleteMapping
