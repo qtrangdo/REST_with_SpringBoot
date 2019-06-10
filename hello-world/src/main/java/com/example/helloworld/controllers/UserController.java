@@ -1,8 +1,6 @@
 package com.example.helloworld.controllers;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -10,7 +8,9 @@ import com.example.helloworld.modelrequest.UserRequest;
 import com.example.helloworld.modelrequest.UserUpdateRequest;
 import com.example.helloworld.modelresponse.UserRest;
 import com.example.helloworld.modelresponse.UserServiceException;
+import com.example.helloworld.userservice.userinterface.UserService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +31,10 @@ public class UserController {
   // similar to Javascript object
   Map<String, UserRest> users;
 
+  //inject dependency (interface ?) for testing
+  @Autowired
+  UserService userService;
+
   @GetMapping()
   public String getUsers(@RequestParam(value="page", defaultValue = "1") int page, @RequestParam(value="limit", defaultValue = "30") int limit) {
     return "getUsers was called with params: page - " + page + " limit - " + limit;
@@ -41,7 +45,7 @@ public class UserController {
   // need to add dependency in pom.xml if want XML response
   @GetMapping(path="/{userId}", produces = { MediaType.APPLICATION_JSON_VALUE })//MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
-    if (true) throw new UserServiceException("An exception is thrown");
+    // if (true) throw new UserServiceException("An exception is thrown");
 
     if (users.containsKey(userId)) {
       return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
@@ -56,15 +60,8 @@ public class UserController {
   )
   // @Valid is a part of Web dependency
   public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserRequest userDetails) {
-    UserRest returnValue = new UserRest();
-    returnValue.setLastname(userDetails.getLastname());
-    returnValue.setFirstname(userDetails.getFirstname());
-    returnValue.setEmail(userDetails.getEmail());
+    UserRest returnValue = userService.createUser(userDetails);
     
-    String userID = UUID.randomUUID().toString();
-    returnValue.setUserId(userID);
-    if (users == null) users = new HashMap<>();
-    users.put(userID, returnValue);
     return new ResponseEntity<UserRest>(returnValue, HttpStatus.CREATED);
   }
 
