@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import com.example.helloworld.modelrequest.UserRequest;
 import com.example.helloworld.modelrequest.UserUpdateRequest;
 import com.example.helloworld.modelresponse.UserRest;
+import com.example.helloworld.modelresponse.UserServiceException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,6 +41,8 @@ public class UserController {
   // need to add dependency in pom.xml if want XML response
   @GetMapping(path="/{userId}", produces = { MediaType.APPLICATION_JSON_VALUE })//MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
+    if (true) throw new UserServiceException("An exception is thrown");
+
     if (users.containsKey(userId)) {
       return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
     } else {
